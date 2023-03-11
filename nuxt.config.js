@@ -1,7 +1,10 @@
+const title = 'Ads Board'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'ads-board',
+    title,
+    titleTemplate: '%s | ' + title,
     htmlAttrs: {
       lang: 'en'
     },

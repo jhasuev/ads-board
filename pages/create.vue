@@ -26,6 +26,11 @@ export default {
       title: '',
       content: ''
     }
+  },
+  head () {
+    return {
+      title: 'Добавить объявление'
+    }
   }
 }
 </script>

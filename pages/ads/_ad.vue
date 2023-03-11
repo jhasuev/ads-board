@@ -14,6 +14,11 @@
 
 <script>
 export default {
-  name: 'AdSingle'
+  name: 'AdSingle',
+  head () {
+    return {
+      title: 'Куплю диски для игры PS1'
+    }
+  }
 }
 </script>
