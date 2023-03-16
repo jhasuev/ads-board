@@ -1,5 +1,6 @@
 <template>
   <div>
+    ads: {{ ads }}
     <div v-for="ad, i in ads" :key="i" class="mb-3 shadow-1">
       <ad-card v-bind="ad" />
     </div>
@@ -14,6 +15,12 @@ export default {
   name: 'IndexPage',
   components: {
     Paginator
+  },
+  async asyncData ({ $axios }) {
+    const result = await $axios.get('get-ads', {})
+    console.log('result', result)
+
+    return { ads: result.list }
   },
   data () {
     return {

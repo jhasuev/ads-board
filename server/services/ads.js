@@ -1,5 +1,5 @@
 const { createClient } = require('redis')
-const ADS_NAME = 'users'
+const ADS_NAME = 'ads'
 
 module.exports = class Ads {
   constructor () {
@@ -19,6 +19,7 @@ module.exports = class Ads {
   }
 
   async insertAd (add) {
-    return await this.client.LPUSH(ADS_NAME, add)
+    const id = await this.getAdsCount() + 1
+    return await this.client.LSET(ADS_NAME, id, { ...add, id })
   }
 }
