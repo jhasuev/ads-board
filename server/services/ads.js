@@ -1,5 +1,5 @@
 const { createClient } = require('redis')
-const ADS_NAME = 'ads'
+const ADS_NAME = 'ADS'
 
 module.exports = class Ads {
   constructor () {
@@ -8,8 +8,14 @@ module.exports = class Ads {
   }
 
   async getAds (start = 0, stop = -1) {
+    let list = await this.client.LRANGE(ADS_NAME, start, stop)
+
+    list = await Promise.all(
+      list.map(id => this.client.get(this.getAdKey(id)))
+    )
+
     return {
-      list: await this.client.LRANGE(ADS_NAME, start, stop),
+      list: list.map(json => JSON.parse(json)),
       count: await this.getAdsCount()
     }
   }
@@ -18,8 +24,13 @@ module.exports = class Ads {
     return await this.client.LLEN(ADS_NAME)
   }
 
-  async insertAd (add) {
+  getAdKey (id) {
+    return `${ADS_NAME}:${id}`
+  }
+
+  async insertAd (ad) {
     const id = await this.getAdsCount() + 1
-    return await this.client.LSET(ADS_NAME, id, { ...add, id })
+    await this.client.set(this.getAdKey(id), JSON.stringify({ ...ad, id }))
+    return await this.client.RPUSH(ADS_NAME, String(id))
   }
 }

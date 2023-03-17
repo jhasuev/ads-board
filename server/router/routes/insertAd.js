@@ -2,6 +2,7 @@ const Ads = require('#app/services/ads.js')
 const ads = new Ads()
 
 module.exports = async (req, res) => {
+  console.log(req.query)
   try {
     res.json({ status: true, data: await ads.insertAd({ title: 'title', content: 'content' }) })
   } catch (error) {
