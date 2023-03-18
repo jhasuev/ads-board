@@ -62,6 +62,10 @@ export default {
 
       const result = await this.$axios.post('insert-ad', ad)
 
+      if (result) {
+        this.$router.push('ads/' + result)
+      }
+
       console.log('result', result)
     }
   }

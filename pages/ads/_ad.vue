@@ -3,8 +3,8 @@
     <div>
       <ad-card
         v-bind="{
-          title: 'Куплю диски для игры PS1',
-          content: 'Куплю диски для игры PS1 (vigilante 8, syphon filter, Tekken 3)'.repeat(10),
+          title: title,
+          content: content,
           full: true,
         }"
       />
@@ -15,9 +15,26 @@
 <script>
 export default {
   name: 'AdSingle',
+  async asyncData ({ $axios, route, redirect }) {
+    try {
+      const result = await $axios.get('get-ad', {
+        params: { id: route.params.ad }
+      })
+      return { ...result }
+    } catch (error) {
+      redirect('/error?msg=' + error)
+      return {}
+    }
+  },
+  data () {
+    return {
+      title: '',
+      content: ''
+    }
+  },
   head () {
     return {
-      title: 'Куплю диски для игры PS1'
+      title: this.title
     }
   }
 }

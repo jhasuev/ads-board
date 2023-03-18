@@ -9,7 +9,11 @@ export default function ({ $axios }, inject) {
   })
 
   $axios.onError((error) => {
-    return new Error(error)
+    return Promise.reject(error)
+  })
+
+  $axios.onResponseError((error) => {
+    return Promise.reject(error)
   })
 
   inject('api', api)

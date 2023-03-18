@@ -7,17 +7,27 @@ module.exports = class Ads {
     this.client.connect()
   }
 
-  async getAds (start = 0, stop = -1) {
-    let list = await this.client.LRANGE(ADS_NAME, start, stop)
+  async getAds (start = 0, end = -1) {
+    let list = await this.client.LRANGE(ADS_NAME, start, end)
 
     list = await Promise.all(
-      list.map(id => this.client.get(this.getAdKey(id)))
+      list.map(id => this.getAd(id))
     )
 
     return {
-      list: list.map(json => JSON.parse(json)),
+      list,
       count: await this.getAdsCount()
     }
+  }
+
+  async getAd (id) {
+    const ad = await this.client.get(this.getAdKey(id))
+
+    if (ad) {
+      return JSON.parse(ad)
+    }
+
+    return null
   }
 
   async getAdsCount () {

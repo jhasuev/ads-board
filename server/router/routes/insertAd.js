@@ -7,10 +7,16 @@ module.exports = async (req, res) => {
     const content = String(req.body.content ?? '')
 
     if (!title || !content) {
-      throw new Error('не все поля заполнены')
+      throw 'Не все поля заполнены'
     }
 
-    res.json({ status: true, data: await ads.insertAd({ title, content }) })
+    const data = await ads.insertAd({ title, content })
+
+    if (!data) {
+      throw 'Что-то пошло не так'
+    }
+
+    res.json({ status: true, data })
   } catch (error) {
     res.json({ status: false, data: error.toString() })
   }
