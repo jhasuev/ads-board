@@ -1,10 +1,20 @@
 const { createClient } = require('redis')
 const ADS_NAME = 'ADS'
+const AD_ID_NAME = 'AD_ID'
 
 module.exports = class Ads {
   constructor () {
     this.client = createClient()
-    this.client.connect()
+    this.client.connect().then(() => {
+      this.init()
+    })
+  }
+
+  async init () {
+    const hasAlreadyId = await this.client.get(AD_ID_NAME)
+    if (!hasAlreadyId) {
+      await this.client.set(AD_ID_NAME, 100)
+    }
   }
 
   async getAds (start = 0, end = -1) {
@@ -38,10 +48,15 @@ module.exports = class Ads {
     return `${ADS_NAME}:${id}`
   }
 
+  async getAdId () {
+    return await this.client.incr(AD_ID_NAME)
+  }
+
   async insertAd (ad) {
-    const id = await this.getAdsCount() + 1
+    const id = await this.getAdId()
     await this.client.set(this.getAdKey(id), JSON.stringify({ ...ad, id }))
-    // TODO заменить RPUSH на LPUSH ?
-    return await this.client.LPUSH(ADS_NAME, String(id))
+    await this.client.LPUSH(ADS_NAME, String(id))
+
+    return id
   }
 }
