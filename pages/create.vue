@@ -65,8 +65,6 @@ export default {
       if (result) {
         this.$router.push('ads/' + result)
       }
-
-      console.log('result', result)
     }
   }
 }

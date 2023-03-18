@@ -42,6 +42,6 @@ module.exports = class Ads {
     const id = await this.getAdsCount() + 1
     await this.client.set(this.getAdKey(id), JSON.stringify({ ...ad, id }))
     // TODO заменить RPUSH на LPUSH ?
-    return await this.client.RPUSH(ADS_NAME, String(id))
+    return await this.client.LPUSH(ADS_NAME, String(id))
   }
 }

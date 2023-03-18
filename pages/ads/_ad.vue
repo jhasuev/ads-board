@@ -20,6 +20,7 @@ export default {
       const result = await $axios.get('get-ad', {
         params: { id: route.params.ad }
       })
+
       return { ...result }
     } catch (error) {
       redirect('/error?msg=' + error)

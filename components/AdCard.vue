@@ -1,12 +1,17 @@
 <template>
   <Card>
     <template #title>
-      {{ title }}
+      <div class="title">
+        {{ full ? title : title.substring(0, 100) }}
+      </div>
     </template>
     <template #content>
-      <div :class="{ 'short-text': !full }">
-        {{ content }}
-      </div>
+      <div
+        :class="{
+          'short-text': !full,
+          'full-text': full
+        }"
+      >{{ content }}</div>
     </template>
     <template v-if="!full" #footer>
       <div class="flex">
@@ -42,9 +47,20 @@ export default {
 </script>
 
 <style scoped>
+
+.title {
+  overflow-wrap: break-word;
+}
+
+.full-text {
+  white-space: pre-line;
+  overflow-wrap: break-word;
+}
+
 .short-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 </style>
